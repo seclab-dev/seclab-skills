@@ -1,0 +1,7 @@
+interface:
+  display_name: "SecLab Icon System"
+  short_description: "生成符合 SDL 的通用 24px SVG UI 图标。"
+  brand_color: "#00C8FF"
+  default_prompt: "使用 $seclab-icon-system 创建或验证 SecLab 通用 SVG UI 图标。"
+policy:
+  allow_implicit_invocation: true

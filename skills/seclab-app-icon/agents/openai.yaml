@@ -1,0 +1,7 @@
+interface:
+  display_name: "SecLab App Icon"
+  short_description: "为 SecLab 应用和套件生成统一的 PNG 图标。"
+  brand_color: "#1D63ED"
+  default_prompt: "使用 $seclab-app-icon 为这个 SecLab 应用或套件制作可直接交付的 PNG 图标。"
+policy:
+  allow_implicit_invocation: true
