@@ -35,4 +35,4 @@
 - 窗口内容根节点通常是 `height: 100%; min-height: 0; display: flex; flex-direction: column;`。
 - 可滚动区域必须设置 `min-height: 0`，避免表格、日志、编辑器撑破窗口。
 - 固定格式 UI（表格列、工具栏按钮、图表容器、编辑器、终端）要有稳定尺寸或 `min/max` 约束。
-- 文本不能溢出按钮、Tag、表格单元格；长 ID/路径优先使用等宽字体、截断、tooltip 或详情抽屉。
+- 文本不能溢出按钮、Tag、表格单元格；长 ID/路径优先使用等宽字体、截断、tooltip 或详情模态框。

@@ -36,15 +36,23 @@
   - `position`: `top | bottom | left | right`
 - `SecLabDrawer`
   - 使用 `v-model` / `modelValue`
-  - 适合详情、编辑表单、较长配置
+  - 仅适合窄幅、单列、轻量且需要持续保留主页面上下文的辅助面板
+  - 典型场景包括快速预览、简单属性检查和与主列表联动的少量设置
 - `SecLabDialog`
   - 使用 `visible`、`title`、`width`、`closeOnClickOverlay`
-  - 适合创建、确认前的复杂表单或短流程
+  - 默认用于详情、查看、创建和编辑内容
+  - 适合多列描述、宽表格、长标识、多分组信息、复杂表单和短流程
+  - 根据内容设置响应式宽度，正文区域统一滚动
 - `SecLabModal`
   - 适合简单确认，不承载复杂表单
 
 ## 使用规则
 
+- 容器选择优先级：
+  1. 默认选择 `SecLabDialog`。
+  2. 内容包含表格、多列描述、长路径、长标识、多分组或大量数据时必须使用 `SecLabDialog`。
+  3. 只有内容可在窄幅单列中完整表达，交互短且保持主页面上下文具有明确价值时，才选择 `SecLabDrawer`。
+  4. 不要仅因为内容名为“详情”或“配置”就选择 `SecLabDrawer`。
 - 图标按钮优先使用现有 `SecLabIcon` 或项目图标系统，避免手写临时 SVG。
 - 删除、停止、重置等破坏性操作使用 `SecLabButton type="danger"` 或 action menu 的 danger 样式。
 - 状态展示优先用 `SecLabTag`，不要用裸色文本表达在线、失败、告警。

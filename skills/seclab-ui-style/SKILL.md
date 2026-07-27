@@ -18,6 +18,7 @@ description: >
 - 文案国际化：新增业务文案必须走 `frontend/src/locales/zh.ts` 和 `frontend/src/locales/en.ts`，不要在模板里硬编码面向用户的中文或英文。
 - DOM 标记：业务页面和关键区域必须提供稳定可搜索的 `data-page`、`data-ui`、`data-slot`，便于调试和自动化。
 - Template 结构标签：SecLab 业务窗口与管理页模板统一使用 `div` 组织结构，不使用 `header`、`main`、`section`、`article` 等 HTML 语义结构标签；页面语义只通过 class、`data-page`、`data-ui`、`data-slot` 表达。
+- 容器选择：详情、查看、创建和编辑内容优先使用 `SecLabDialog`；仅当内容窄、轻量、线性，且必须在操作时持续保留主页面上下文时才使用 `SecLabDrawer`。
 - 风格边界：禁止黑客卡通、骷髅、绿色字符雨、大面积霓虹、科幻 HUD、强饱和蓝紫渐变和装饰性 orb/blob。
 - 布局边界：不要把页面 section 做成漂浮卡片；不要卡片套卡片；只在重复项、Modal/Dialog/Drawer、工具面板中使用卡片。
 - 交付验证：修改主控前端后运行 `pnpm -C frontend format`、`pnpm -C frontend lint`、`pnpm -C frontend build`；修改 UI 库后运行 `pnpm check`。
