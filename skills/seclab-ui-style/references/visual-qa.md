@@ -2,43 +2,28 @@
 
 ## ECharts
 
-- 主色限制：`#00C8FF`、`#00D4B4`、`#7C6CFF`、`#FFB547`、`#FF5E7A`。
-- 背景透明，容器使用 SDL 背景。
-- 网格线使用弱边框，例如 `rgba(148, 163, 184, 0.12)`。
-- 坐标轴和图例文本使用 `--sdl-text-muted` 语义，字号通常 10-12px。
-- 图表容器必须有稳定高度，窗口尺寸变化后要 resize。
+- 从当前 SDL Token 或主题适配生成图表颜色，不假设 CSS 变量能被 canvas 自动解析。
+- 保持底盘透明，容器使用 SDL 背景；弱化网格线和非关键轴线。
+- 为容器设置稳定高度，在窗口或面板尺寸变化后调用 resize。
+- 为数据提供文本、表格或可访问摘要，不让颜色成为唯一信息来源。
 
 ## Monaco
 
-- 优先复用 `frontend/src/components/editor/MonacoEditor.vue` 和 `sdl-monaco-theme.ts`。
-- 编辑器字体使用 `var(--sdl-font-mono)`，字号通常 13-14px。
-- 编辑器容器必须 `min-height: 0`，避免在窗口内撑破布局。
-- 工具栏按钮使用自研组件，不在编辑器周围添加重装饰。
+- 优先搜索并复用消费项目已有 Monaco wrapper、主题和语言配置；不要假设固定 Vue 文件路径。
+- 使用 SDL 等宽字体，确保容器 `min-height: 0`，并让工具栏使用当前框架的 SecLab 组件。
+- 检查只读、加载、错误、空内容和窗口 resize。
 
 ## xterm
 
-- 使用 `@xterm/xterm` 与 `@xterm/addon-fit`。
-- 终端背景使用 `#0F172A` 或 SDL canvas/panel 深色。
-- 光标、选区、链接高亮使用 `--sdl-primary` 语义，避免荧光绿。
-- 终端容器必须在窗口 resize 后 fit，且不能被 header/footer 挤出。
-
-## 视觉检查
-
-- 桌面窗口、抽屉、Dialog 在窄宽下不溢出。
-- 工具栏按钮、Tag、输入框文本不重叠、不截断关键字。
-- 表格空状态、加载状态、错误状态都存在。
-- 固定列、操作列、滚动容器不造成横向布局跳动。
-- 图表、编辑器、终端必须非空白，容器尺寸稳定。
-- 深色和浅色 token 不直接硬编码冲突。
+- 复用项目当前安装的 xterm 包、fit addon 和连接生命周期。
+- 使用 SDL 深色 surface 与主色语义，避免荧光绿和装饰性终端效果。
+- 在容器 resize 后 fit，清理监听器和会话资源，避免 header/footer 遮挡终端。
 
 ## 交付检查
 
-前端改动完成后运行：
-
-```bash
-pnpm -C frontend format
-pnpm -C frontend lint
-pnpm -C frontend build
-```
-
-如果改动图表、编辑器、终端、复杂响应式窗口，优先用浏览器或截图实际检查至少一个常用桌面尺寸和一个窄窗口尺寸。
+- 检查 Dialog、Drawer、表格、浮层和工具栏在窄宽下不溢出。
+- 检查正常、加载、空、错误、禁用、超长文本和大量数据状态。
+- 检查固定列、滚动容器和弹出层不会跳动或逃出视口。
+- 分别检查浅色、深色、键盘操作、焦点可见性和 reduced-motion。
+- 从目标项目清单读取并运行实际 format、lint、type-check、test、build 命令。
+- 对复杂响应式页面至少实际检查一个常用桌面尺寸和一个窄窗口尺寸。

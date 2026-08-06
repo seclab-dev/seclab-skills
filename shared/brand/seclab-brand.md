@@ -1,6 +1,6 @@
 # SecLab 品牌视觉规范
 
-本文档定义 `seclab-dev` 各项目和 skill 共用的稳定品牌原则。具体 UI Token 值以 `seclab-ui/packages/tokens/index.css` 为唯一实现来源；本文档不替代 Token 包。
+本文档定义 `seclab-dev` 各项目和 skill 共用的稳定品牌原则。具体 UI Token、组件与图标实现以消费项目当前安装版本的 `@seclab-dev/*` 公开包为准；本文档不替代运行时包或类型声明。
 
 ## 品牌定位
 
@@ -56,10 +56,15 @@
 
 ## 事实来源
 
-| 内容 | 唯一来源 |
+按消费项目当前版本解析事实，不要求固定源码目录。优先级为：消费仓代码与依赖声明 → 当前安装包的公开入口和类型 → 可选本地 `seclab-ui` 源码 → 官方 GitHub 定位信息。远端最新分支不得覆盖已安装版本。
+
+| 内容 | 公开来源 |
 | --- | --- |
 | 品牌原则与视觉边界 | `seclab-skills/shared/brand/seclab-brand.md` |
-| UI 颜色、字体、间距、圆角和主题 Token | `seclab-ui/packages/tokens/index.css` |
-| Vue 基础组件 | `seclab-ui/packages/vue/` |
-| 通用 SVG UI 图标 | `seclab-ui/packages/icons/` |
+| UI 颜色、字体、间距、圆角和主题 Token | `@seclab-dev/tokens` 的 CSS 导出 |
+| Vue 3 基础组件 | `@seclab-dev/vue` 的公开导出与 `.d.ts` |
+| React 19 基础组件 | `@seclab-dev/react` 的公开导出与 `.d.ts` |
+| 通用 SVG UI 图标 | `@seclab-dev/icons` 的公开导出 |
 | 应用与套件最终 PNG 资产 | 对应应用或套件消费仓库 |
+
+`seclab-ui` 官方仓库为 `https://github.com/seclab-dev/seclab-ui.git`。它只作源码开发、共享契约和最终定位来源；skill 不自动 clone。

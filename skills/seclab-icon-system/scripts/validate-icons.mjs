@@ -1,11 +1,14 @@
 #!/usr/bin/env node
-import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
 const targetDirs =
   process.argv.length > 2
     ? process.argv.slice(2)
-    : ['packages/icons/svgs/common']
+    : [
+        'packages/icons/src/svgs/common',
+        'packages/icons/src/svgs/apps',
+      ]
 const fileNamePattern = /^[a-z0-9-]+\.svg$/
 const forbiddenPatterns = [
   /<text[\s>]/i,
@@ -18,6 +21,14 @@ const errors = []
 let validatedCount = 0
 
 for (const targetDir of targetDirs) {
+  if (!existsSync(targetDir)) {
+    errors.push(`${targetDir}: directory does not exist`)
+    continue
+  }
+  if (!statSync(targetDir).isDirectory()) {
+    errors.push(`${targetDir}: target is not a directory`)
+    continue
+  }
   const files = readdirSync(targetDir)
     .filter((file) => file.endsWith('.svg'))
     .sort()

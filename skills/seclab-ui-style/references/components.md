@@ -1,69 +1,46 @@
 # SecLab Components
 
-## 事实来源
+## 事实与边界
 
-- 组件源码：`linked-repos/seclab-ui/packages/vue/src/components/`
-- 导出入口：`linked-repos/seclab-ui/packages/vue/src/index.ts`
-- 发布入口：`@seclab-dev/vue`
-- 主控 `frontend/src/components/ui/` 是兼容导出层，不是组件事实来源。
-- 真实 Props 以组件源码和发布类型声明为准。
+- 先以消费项目当前安装的 `@seclab-dev/vue` 或 `@seclab-dev/react` 类型声明确认 Props、事件和公开类型。
+- 本地 `seclab-ui/docs/components/` 可补充共享用途、交互和无障碍契约，但不能覆盖已安装版本。
+- 两端保持相同业务语义；受控值、事件、内容扩展和 DOM 属性按框架映射。
+- 只读安装包，不直接修改 `node_modules`。需要改组件实现时切换到可写的 `seclab-ui` 源码仓。
 
-## 组件清单
+## 公共组件范围
 
 - 操作：`SecLabButton`、`SecLabActionMenu`
-- 输入：`SecLabInput`、`SecLabSelect`、`SecLabSwitch`、`SecLabCheckbox`、`SecLabDateTimeRangePicker`
-- 数据：`SecLabTable`、`SecLabPagination`、`SecLabDescriptions`、`SecLabTag`
+- 输入：`SecLabInput`、`SecLabSelect`、`SecLabSwitch`、`SecLabCheckbox`、`SecLabDateTimeRangePicker`、`SecLabFormItem`
+- 数据：`SecLabTable`、`SecLabPagination`、`SecLabDescriptions`、`SecLabTag`、`SecLabSelectionBar`
 - 容器：`SecLabCard`、`SecLabDrawer`、`SecLabDialog`、`SecLabModal`
-- 反馈：`SecLabAlert`、`SecLabToast`、`SecLabLoading`、`SecLabEmpty`、`SecLabTooltip`
+- 反馈：`SecLabAlert`、`SecLabToast`、`SecLabLoading`、`SecLabEmpty`、`SecLabTooltip`、`SecLabIcon`
 - 导航：`SecLabMenu`、`SecLabTabs`、`SecLabBreadcrumb`、`SecLabBreadcrumbItem`
 
-## 常用 API 提醒
+组件清单会随版本变化。探测输出与当前 `.d.ts` 高于本清单。
 
-- `SecLabButton`
-  - `type`: `primary | secondary | danger | warning | info`
-  - `size`: `small | default | large`
-  - 支持 `disabled`、`loading`
-- `SecLabTable`
-  - Props 是 `data`、`columns`、`border`
-  - 列支持 `prop`、`label`、`width`、`minWidth`、`align`、`headerAlign`、`slot`、`headerSlot`、`fixed`
-  - 没有 `loading` prop；加载态用外围 `SecLabLoading` 或页面级状态处理
-  - 空状态通过 `empty` slot 或默认 `common.noData`
-- `SecLabTag`
-  - `type`: `primary | success | warning | danger | info | default`
-  - `effect`: `light | plain | dark`，当前常用 `light`
-- `SecLabTooltip`
-  - Prop 是 `text`，不是 `content`
-  - `position`: `top | bottom | left | right`
-- `SecLabDrawer`
-  - 使用 `v-model` / `modelValue`
-  - 仅适合窄幅、单列、轻量且需要持续保留主页面上下文的辅助面板
-  - 典型场景包括快速预览、简单属性检查和与主列表联动的少量设置
-- `SecLabDialog`
-  - 使用 `visible`、`title`、`width`、`closeOnClickOverlay`
-  - 默认用于详情、查看、创建和编辑内容
-  - 适合多列描述、宽表格、长标识、多分组信息、复杂表单和短流程
-  - 根据内容设置响应式宽度，正文区域统一滚动
-- `SecLabModal`
-  - 适合简单确认，不承载复杂表单
+## 选择规则
 
-## 使用规则
+- 默认使用 `SecLabDialog` 承载详情、查看、创建和编辑。
+- 内容包含宽表格、多列描述、长路径、长标识、多分组或大量数据时使用 Dialog。
+- 仅当内容可在窄幅单列完整表达、流程短、保持主页面上下文有明确价值时使用 Drawer。
+- 简短确认或破坏性警告使用 `SecLabModal`，复杂自定义内容不用 Modal。
+- 状态使用 `SecLabTag`，不要只靠裸色文本表达在线、失败或告警。
+- 表单标签、提示和错误使用 `SecLabFormItem`；详情键值优先使用 `SecLabDescriptions`。
+- 多个次要操作收敛到 `SecLabActionMenu`，单一主操作使用 `SecLabButton`。
+- 图标使用 `SecLabIcon` 和已发布图标名，避免临时 SVG、emoji 或文本字形。
 
-- 容器选择优先级：
-  1. 默认选择 `SecLabDialog`。
-  2. 内容包含表格、多列描述、长路径、长标识、多分组或大量数据时必须使用 `SecLabDialog`。
-  3. 只有内容可在窄幅单列中完整表达，交互短且保持主页面上下文具有明确价值时，才选择 `SecLabDrawer`。
-  4. 不要仅因为内容名为“详情”或“配置”就选择 `SecLabDrawer`。
-- 图标按钮优先使用现有 `SecLabIcon` 或项目图标系统，避免手写临时 SVG。
-- 删除、停止、重置等破坏性操作使用 `SecLabButton type="danger"` 或 action menu 的 danger 样式。
-- 状态展示优先用 `SecLabTag`，不要用裸色文本表达在线、失败、告警。
-- 表单项优先用 `SecLabFormItem` 组织 label、说明和错误。
-- 详情键值对优先用 `SecLabDescriptions`，不要手写松散的两列列表。
-- 大量操作不要铺满工具栏，收敛到 `SecLabActionMenu`。
+## 验证重点
+
+- 受控组件的值与变化回调完整，不能只更新视觉状态。
+- 表格 `rowKey` 稳定；加载态由组件公开能力或外围 `SecLabLoading` 处理，不猜测 `loading` Prop。
+- 浮层支持 Escape、焦点陷阱、关闭后焦点恢复、滚动锁和视口边缘定位。
+- 表单控件有 label、hint/error 关联；图标按钮和关闭按钮具有可本地化名称。
+- 组件覆盖正常、禁用、错误、加载、空态和 320px 窄容器。
 
 ## 标记约定
 
-- 页面根：`data-page="node-manager"`、`data-page="platform-log"` 等。
-- 工具栏：`data-ui="toolbar"`。
-- 表格：`data-ui="table"`。
-- 详情区域：`data-slot="detail"`。
-- 弹窗/抽屉内部关键区域继续使用 `data-slot="header|body|footer"`。
+- 页面根：`data-page="node-manager"`
+- 工具栏：`data-ui="toolbar"`
+- 表格：`data-ui="table"`
+- 详情区域：`data-slot="detail"`
+- 浮层关键区域：`data-slot="header|body|footer"`

@@ -1,0 +1,7 @@
+interface:
+  display_name: "SecLab UI Style"
+  short_description: "构建符合 SDL 的 Vue 与 React 安全运维界面。"
+  brand_color: "#1D63ED"
+  default_prompt: "使用 $seclab-ui-style 设计、实现或审查这个 SecLab Vue/React 界面。"
+policy:
+  allow_implicit_invocation: true

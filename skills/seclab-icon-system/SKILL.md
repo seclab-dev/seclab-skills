@@ -1,36 +1,53 @@
 ---
 name: seclab-icon-system
-description: >
-  为 SecLab 按钮、工具栏、菜单、状态、数据展示和紧凑应用语义场景生成、验证及维护自有
-  24px SVG UI 图标。不用于应用库、桌面、任务栏或 Compose 套件入口的 PNG 图标；
-  后者必须使用 seclab-app-icon。
+description: 为 SecLab Vue 或 React 界面的按钮、工具栏、菜单、状态与紧凑应用语义场景创建、验证、发布和消费可主题化的 24px SVG UI 图标。用于新增或修复 @seclab-dev/icons 资产、图标命名空间、fallback 行为及 SecLabIcon 调用；应用库、桌面、任务栏和套件入口 PNG 使用 seclab-app-icon。
 ---
 
 # SecLab Icon System
 
-为按钮、工具栏、菜单、状态、数据展示和紧凑应用语义场景制作可主题化的 24px SVG 图标。应用库、桌面、任务栏和套件入口图标使用 `$seclab-app-icon`。
+按照“分析 → 解析事实 → 执行 → 验收”维护 SecLab 24px SVG。不要把已安装包当作可写源码，也不要把应用 PNG 混入公共 SVG 包。
 
-## Workflow
+## 1. 分析
 
-1. Read `../../shared/brand/seclab-brand.md` and `references/icon-style.md` before drawing new icons.
-2. 通用 UI 图标放入 `packages/icons/svgs/common/`；窗口标题、通知来源、菜单和空状态使用的应用语义图标放入 `packages/icons/svgs/apps/`。
-3. Use `24x24` SVGs with `viewBox="0 0 24 24"`, `currentColor` as the structural stroke color, and `var(--sdl-primary)` only for controlled emphasis.
-4. 使用 `common` 与 `apps` 独立命名空间，`fallback.svg` 只放在 `common`。
-5. Update UI code to render icon names through the project icon component instead of displaying strings directly.
-6. 分别校验 `packages/icons/svgs/common` 和 `packages/icons/svgs/apps`，再在 `seclab-ui` 运行 `pnpm check`。
+1. 判断任务是消费已有图标、新增公共图标、修复 SVG，还是调整图标组件/发布包。
+2. 判断目标是通用操作语义还是紧凑应用语义；桌面、应用库、任务栏和套件入口改用 `$seclab-app-icon`。
+3. 阅读 `../../shared/brand/seclab-brand.md` 和 `references/icon-style.md`。
 
-## Hard Rules
+## 2. 解析事实
 
-- Do not use emoji, text glyphs, external icon fonts, raster images, or embedded base64.
-- 应用 SVG 只用于紧凑语义场景，不得替代桌面、任务栏、应用库或套件入口 PNG。
-- Do not copy vendor logos unless the user explicitly asks and the repo already has the rights to use them.
-- Do not use cyberpunk, hacker, neon, or decorative game-like styling.
-- Keep icons readable at `16px`, `24px`, `28px`, and `40px`.
-- Prefer a consistent 2px stroke, rounded line caps, and rounded joins.
-- Keep SVG files hand-editable and deterministic.
+- 消费任务优先读取目标项目当前安装版本的 `@seclab-dev/icons` 与 `@seclab-dev/vue`/`react` 公开类型和导出。
+- 安装包与 `node_modules` 只读。新增或修改 SVG 必须定位用户提供、显式软链接或环境中可发现的可写 `seclab-ui` 源码仓。
+- 源码仓不存在时可完成名称选择与消费代码修改，但不得假装已写入或发布公共图标。
+- 官方仓库地址只作定位兜底：`https://github.com/seclab-dev/seclab-ui.git`；不自动 clone，不用远端 HEAD 覆盖安装版本。
 
-## Output Contract
+## 3. 执行
 
-- File names: lowercase letters, digits, and hyphens only.
-- Missing icon behavior: render `fallback.svg`, never fall back to emoji.
-- Validation must pass before considering icon work complete.
+1. 在源码仓中搜索现有名称和相近语义，优先复用。
+2. 将通用 UI 图标写入 `packages/icons/src/svgs/common/`，将窗口标题、通知来源、菜单和空状态使用的应用语义图标写入 `packages/icons/src/svgs/apps/`。
+3. 使用独立 `common` 与 `apps` 命名空间；`fallback.svg` 只属于 `common`。
+4. 使用 `24x24`、`viewBox="0 0 24 24"`、`currentColor` 结构描边；只用 `var(--sdl-primary)` 做小面积受控强调。
+5. 通过当前框架的 `SecLabIcon` 消费名称：Vue 从 `@seclab-dev/vue` 导入并使用模板 Props，React 从 `@seclab-dev/react` 导入并使用 JSX Props。语义图标提供 label，装饰图标使用公开的 decorative 能力。
+6. 不直接展示图标名字字符串，不在业务组件临时嵌入重复 SVG。
+
+## 4. 硬性规则
+
+- 禁止 emoji、文本字形、外部 icon font、光栅图片、`<image>`、`<text>` 和 base64。
+- 不复制第三方商标，除非用户明确要求且仓库确认拥有使用权。
+- 禁止 cyberpunk、黑客、霓虹和游戏装饰风格。
+- 保持 16px、24px、28px、40px 清晰；默认 2px 描边、圆角端点和连接。
+- 文件名只用小写字母、数字和短横线；SVG 保持可手工编辑、确定性和小体积。
+- 缺失或非法名称使用 `common/fallback.svg`，不得回退为 emoji。
+
+## 5. 验收
+
+1. 从可写 UI 源码仓根目录运行：
+
+```bash
+node <skill-dir>/scripts/validate-icons.mjs \
+  packages/icons/src/svgs/common \
+  packages/icons/src/svgs/apps
+```
+
+2. 运行 `seclab-ui` 当前 `package.json` 定义的 format/check/test/build 流程。
+3. 在浅色和深色主题下检查 16px、24px、40px；确认对齐、描边、命名空间和 fallback。
+4. 消费代码分别按目标框架运行 type-check、lint、test 和 build。

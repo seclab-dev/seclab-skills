@@ -23,9 +23,9 @@ seclab-skills/
 | --- | --- |
 | `seclab-app-icon` | 生成和验证内置应用、应用库入口与 Compose 套件 PNG 图标。 |
 | `seclab-icon-system` | 维护按钮、工具栏、菜单和状态等 24px SVG 图标。 |
-| `seclab-ui-style` | 使用 SDL Token 和 SecLab UI 组件实现前端界面。 |
+| `seclab-ui-style` | 使用 SDL Token 和 SecLab Vue 3/React 19 组件实现、审查前端界面。 |
 
-共享品牌规范位于 `shared/brand/seclab-brand.md`。运行时 Token、组件和 SVG 图标以 `seclab-ui` 对应包为准。
+共享品牌规范位于 `shared/brand/seclab-brand.md`。运行时 Token、组件和 SVG 图标以消费仓当前安装版本的 `@seclab-dev/*` 公开包为准；本地 `seclab-ui` 源码仓是可选开发信息源。
 
 ## 接入方式
 
@@ -36,6 +36,17 @@ ln -s /absolute/path/to/seclab-skills/skills/seclab-app-icon \
 ```
 
 本地绝对路径软链接不得提交到 Git。
+
+## UI 环境探测
+
+`seclab-ui-style` 提供无第三方依赖、只读的环境探测器，用于识别消费仓的 Vue/React 技术栈、SecLab 包版本、公开声明与可选源码仓：
+
+```bash
+node skills/seclab-ui-style/scripts/inspect-seclab-context.mjs \
+  --root /path/to/consumer-project
+```
+
+追加 `--format json` 可获得稳定结构化输出；追加 `--seclab-ui <path>` 可显式提供本地源码仓。脚本不联网、不 clone、不写文件。
 
 ## 维护规则
 

@@ -1,40 +1,64 @@
 ---
 name: seclab-ui-style
-description: >
-  使用 SecLab Design Language (SDL) 与自研基础 UI 套件创建符合 Security Lab Platform 风格的
-  Vue 3 窗口组件、Dashboard、Monaco 编辑器、xterm 终端与 ECharts 可视化。
+description: 使用 SecLab Design Language (SDL)、公开 Token 与 SecLab 自研组件设计、实现、审查或重构 Vue 3 和 React 19 的安全运维界面。用于窗口应用、Dashboard、管理页、表格、表单、日志、ECharts、Monaco、xterm、响应式布局、主题与可访问性任务。
 ---
 
-# SecLab UI Style Skill
+# SecLab UI Style
 
-本 skill 用于 SecLab 前端页面、窗口应用、Dashboard、表格管理页、日志页、图表、Monaco 编辑器和 xterm 终端的实现与重构。SecLab 前端必须优先使用自研 UI 组件和 SDL token，保持专业、安全运维控制台的高密度工程风格。
+按照“分析 → 解析事实 → 实现 → 验收”完成 SecLab 前端任务。保持专业、安全运维控制台的高密度工程风格，不把任一框架或本地仓库布局当作默认前提。
 
-开始视觉设计前读取 `../../shared/brand/seclab-brand.md`；具体 Token 数值仍以 `seclab-ui/packages/tokens/index.css` 为准。
+## 1. 分析任务
 
-## 必须遵守
+开始前确认目标页面、用户操作、信息密度、目标文件和消费项目。根据目标文件、项目依赖和现有导入识别 Vue、React 或混合仓；混合仓必须按当前目标包或文件选择框架，不同时加载两套实现细节。
 
-- 事实来源优先：公共 Token、组件和图标分别以 `seclab-ui/packages/tokens`、`seclab-ui/packages/vue`、`seclab-ui/packages/icons` 为准；主控本地文件只负责消费和项目专属适配。
-- 组件优先：业务 UI 优先使用 `SecLab*` 自研组件，不引入 Element Plus、Ant Design、Naive UI 等第三方 UI 框架。
-- 文案国际化：新增业务文案必须走 `frontend/src/locales/zh.ts` 和 `frontend/src/locales/en.ts`，不要在模板里硬编码面向用户的中文或英文。
-- DOM 标记：业务页面和关键区域必须提供稳定可搜索的 `data-page`、`data-ui`、`data-slot`，便于调试和自动化。
-- Template 结构标签：SecLab 业务窗口与管理页模板统一使用 `div` 组织结构，不使用 `header`、`main`、`section`、`article` 等 HTML 语义结构标签；页面语义只通过 class、`data-page`、`data-ui`、`data-slot` 表达。
-- 容器选择：详情、查看、创建和编辑内容优先使用 `SecLabDialog`；仅当内容窄、轻量、线性，且必须在操作时持续保留主页面上下文时才使用 `SecLabDrawer`。
-- 风格边界：禁止黑客卡通、骷髅、绿色字符雨、大面积霓虹、科幻 HUD、强饱和蓝紫渐变和装饰性 orb/blob。
-- 布局边界：不要把页面 section 做成漂浮卡片；不要卡片套卡片；只在重复项、Modal/Dialog/Drawer、工具面板中使用卡片。
-- 交付验证：修改主控前端后运行 `pnpm -C frontend format`、`pnpm -C frontend lint`、`pnpm -C frontend build`；修改 UI 库后运行 `pnpm check`。
+## 2. 解析事实
 
-## 任务路由
+1. 阅读 `../../shared/brand/seclab-brand.md`。
+2. 在当前 skill 目录运行只读探测器：
 
-根据任务类型读取对应 reference；如果任务跨多个类型，按顺序读取多个文件。
+```bash
+node scripts/inspect-seclab-context.mjs --root <consumer-project>
+```
 
-- 改 token、颜色、字体、间距、圆角、密度：读 `references/tokens-and-style.md`。
-- 写或改自研组件调用、表格、表单、按钮、弹窗、抽屉：读 `references/components.md`。
-- 写或改窗口应用、Dashboard、管理页、日志页、详情页：读 `references/page-patterns.md`。
-- 写或改 ECharts、Monaco、xterm、视觉 QA 或交付检查：读 `references/visual-qa.md`。
+3. 阅读 `references/environment-and-sources.md`，按输出解析事实来源。
+4. 优先使用消费项目当前安装版本的公开入口与 `.d.ts`；本地 `seclab-ui` 源码和官方 GitHub 只作补充，禁止用远端最新接口覆盖已安装版本。
+5. 无法确认公开 Props 时停止猜测，报告缺少的包、声明或源码。
+
+## 3. 按任务加载参考
+
+只读取与当前任务相关的 reference；跨类型任务按表中顺序组合。
+
+| 任务 | 必读参考 |
+| --- | --- |
+| Token、主题、颜色、字体、间距、圆角、密度 | `references/tokens-and-style.md` |
+| 组件、表格、表单、按钮、Dialog、Drawer | `references/components.md` + 对应框架参考 |
+| 窗口应用、Dashboard、管理页、日志页、详情页 | `references/page-patterns.md` + 对应框架参考 |
+| ECharts、Monaco、xterm、视觉或交付 QA | `references/visual-qa.md` |
+| Vue 3 实现 | `references/framework-vue.md` |
+| React 19 实现 | `references/framework-react.md` |
+
+## 4. 实现约束
+
+- 优先使用当前项目已安装的 `SecLab*` 组件，不引入 Element Plus、Ant Design、Naive UI 等替代框架。
+- 使用 `@seclab-dev/tokens` 的 SDL 语义变量；不要在业务代码中重建主题或散落硬编码颜色。
+- 沿用消费项目现有国际化、路由、状态管理、测试和代码风格；不要假设存在 `frontend/src/locales`、Pinia 或特定目录。
+- 为页面和关键区域提供稳定、可搜索的 `data-page`、`data-ui`、`data-slot`。
+- 使用项目既有结构标签约定。SecLab 窗口和高密度管理界面默认用稳定容器层组织，不为装饰增加多余语义层级。
+- 详情、查看、创建和编辑默认使用 `SecLabDialog`；只有窄、轻、线性内容必须持续保留主页面上下文时才用 `SecLabDrawer`。
+- 禁止黑客卡通、骷髅、绿色字符雨、大面积霓虹、科幻 HUD、强饱和蓝紫渐变和装饰性 orb/blob。
+- 不把页面分区全部做成漂浮卡片，不嵌套卡片；卡片只用于重复实体、Modal/Dialog/Drawer 或明确工具面板。
+
+## 5. 验收
+
+1. 检查正常、加载、空、错误、禁用和权限不足状态。
+2. 检查键盘路径、焦点、ARIA 名称、浅色/深色主题、窄窗口与长文本。
+3. 从目标项目 `package.json` 读取并运行现有 format、lint、type-check、test、build 命令；不要硬编码主控命令到其它仓库。
+4. 修改 `seclab-ui` 源码时运行该仓库定义的完整检查；只消费发布包时不得改写 `node_modules`。
+5. 涉及图表、编辑器、终端或复杂响应式布局时，用浏览器或截图检查常用桌面尺寸和窄窗口尺寸。
 
 ## 产品气质
 
 - Engineering：结构清晰、状态明确、操作可预测、高可扫描性。
-- Observability：强调遥测、日志、指标、拓扑、事件流和可追溯操作。
-- Information Density：优先紧凑、稳定、可重复使用的业务界面，而不是营销式或展示型页面。
-- Domain Fit：安全测试和分布式基础设施控制平面，视觉应冷静、克制、可信。
+- Observability：突出遥测、日志、指标、拓扑、事件流和可追溯操作。
+- Information Density：优先紧凑、稳定、可复用的业务界面，而非营销式展示。
+- Domain Fit：面向安全测试和分布式基础设施控制，保持冷静、克制、可信。
