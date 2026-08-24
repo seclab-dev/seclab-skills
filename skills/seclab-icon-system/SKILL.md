@@ -11,7 +11,7 @@ description: 为 SecLab Vue 或 React 界面的按钮、工具栏、菜单、状
 
 1. 判断任务是消费已有图标、新增公共图标、修复 SVG，还是调整图标组件/发布包。
 2. 判断目标是通用操作语义还是紧凑应用语义；桌面、应用库、任务栏和套件入口改用 `$seclab-app-icon`。
-3. 阅读 `../../shared/brand/seclab-brand.md` 和 `references/icon-style.md`。
+3. 阅读 `references/seclab-brand.md` 和 `references/icon-style.md`。
 
 ## 2. 解析事实
 

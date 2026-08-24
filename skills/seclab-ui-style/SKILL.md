@@ -13,7 +13,7 @@ description: 使用 SecLab Design Language (SDL)、公开 Token 与 SecLab 自�
 
 ## 2. 解析事实
 
-1. 阅读 `../../shared/brand/seclab-brand.md`。
+1. 阅读 `references/seclab-brand.md`。
 2. 在当前 skill 目录运行只读探测器：
 
 ```bash

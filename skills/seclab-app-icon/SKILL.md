@@ -9,7 +9,7 @@ description: 为 SecLab 内置应用、应用库、桌面、任务栏和 Compose
 
 ## 1. 分析与路由
 
-1. 阅读 `../../shared/brand/seclab-brand.md`、`references/visual-language.md` 和 `references/approved-family.md`。
+1. 阅读 `references/seclab-brand.md`、`references/visual-language.md` 和 `references/approved-family.md`。
 2. 判断资产是否属于应用库、桌面、任务栏、内置应用或 Compose 套件入口；若是按钮、工具栏、状态或紧凑菜单图标，切换到 `$seclab-icon-system`。
 3. 内置应用按需读取 `references/app-icon-map.md`；套件读取当前消费仓的 manifest、README、功能和既有资产。
 4. 检查目标仓现有图标、名称、清单与构建命令。不要假设目标一定是 `seclab` 主控或固定目录结构。

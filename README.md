@@ -2,7 +2,7 @@
 
 `seclab-skills` 是 SecLab 组织级 AI Skill 源，用于统一设计语言、图标生成、界面实现和可重复开发流程。
 
-业务代码、组件实现和最终视觉资产不存放在本仓库。消费仓库通过本地软链接使用 skill，修改回到本仓库完成。
+业务代码、组件实现和最终视觉资产不存放在本仓库。每个 skill 都是可独立复制、压缩和安装的自包含发布包。
 
 ## 目录结构
 
@@ -14,6 +14,8 @@ seclab-skills/
 │   └── seclab-ui-style/
 ├── shared/
 │   └── brand/
+├── scripts/
+│   └── sync-shared-references.mjs
 └── README.md
 ```
 
@@ -25,17 +27,14 @@ seclab-skills/
 | `seclab-icon-system` | 维护按钮、工具栏、菜单和状态等 24px SVG 图标。 |
 | `seclab-ui-style` | 使用 SDL Token 和 SecLab Vue 3/React 19 组件实现、审查前端界面。 |
 
-共享品牌规范位于 `shared/brand/seclab-brand.md`。运行时 Token、组件和 SVG 图标以消费仓当前安装版本的 `@seclab-dev/*` 公开包为准；本地 `seclab-ui` 源码仓是可选开发信息源。
+共享品牌规范的维护源位于 `shared/brand/seclab-brand.md`，并同步到每个 skill 的 `references/seclab-brand.md` 随包分发。运行时 Token、组件和 SVG 图标以消费仓当前安装版本的 `@seclab-dev/*` 公开包为准；本地 `seclab-ui` 源码仓是可选开发信息源。
 
 ## 接入方式
 
 ```bash
 mkdir -p .agents/skills
-ln -s /absolute/path/to/seclab-skills/skills/seclab-app-icon \
-  .agents/skills/seclab-app-icon
+cp -r /absolute/path/to/seclab-skills/skills/* .agents/skills/
 ```
-
-本地绝对路径软链接不得提交到 Git。
 
 ## UI 环境探测
 
@@ -50,17 +49,19 @@ node skills/seclab-ui-style/scripts/inspect-seclab-context.mjs \
 
 ## 维护规则
 
-1. 只在本仓库维护 skill 真实文件。
-2. 单个 skill 的专用脚本保留在对应 skill 内。
-3. 两个以上 skill 复用的稳定脚本再提升到 `shared/scripts/`。
+1. 单个 skill 的运行时文件必须全部位于自身目录，不得引用 `../` 越出包边界。
+2. 共享品牌规范只在 `shared/brand/seclab-brand.md` 编辑，随后运行同步脚本更新各 skill 内置副本。
+3. 单个 skill 的专用脚本保留在对应 skill 内。
 4. 业务专属规则留在业务仓库。
 5. 最终 PNG、SVG、页面和组件资产提交到消费仓库。
 
 ## 验证
 
 ```bash
+node scripts/sync-shared-references.mjs --check
+
 python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py \
   skills/seclab-app-icon
 ```
 
-修改多个 skill 时逐个验证。带脚本的 skill 需要使用真实输入验证成功和失败场景。
+编辑共享品牌规范后运行 `node scripts/sync-shared-references.mjs --write`。修改多个 skill 时逐个验证；带脚本的 skill 需要使用真实输入验证成功和失败场景。
